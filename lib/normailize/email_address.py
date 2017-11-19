@@ -15,7 +15,7 @@ Examples
 """
 import re
 
-from .provider import create_provider
+from .providers import create_provider
 
 """Private: Simple regex to validate format of an email address
 
@@ -26,7 +26,9 @@ local or domain part of your email addresses, make sure to strip them for
 normalization purposes. For '@' in the local part to be allowed, split
 local and domain part at the _last_ occurrence of the @-symbol.
 """
-EMAIL_ADDRESS_REGEX = r'\A([a-z0-9_\-][a-z0-9_\-\+\.]{,62})?[a-z0-9_\-]@(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)+[a-z]{2,}\z'
+EMAIL_ADDRESS_REGEX = (
+    r'\A([a-z0-9_\-][a-z0-9_\-\+\.]{,62})?[a-z0-9_\-]@(([a-z0-9]|[a-z0-9]'
+    r'[a-z0-9\-]*[a-z0-9])\.)+[a-z]{2,}\z')
 EMAIL_MATCHER = re.compile(EMAIL_ADDRESS_REGEX, flags=re.I)
 
 
@@ -52,7 +54,8 @@ class EmailAddress(object):
     def remove_dots(self):
         self.username = self.username.replace('.', '')
 
-    # Internal: Removes everything after the first occurrence of a plus sign in the username parts
+    # Internal: Removes everything after the first occurrence of a plus sign in
+    # the username parts
     #
     # Returns nothing
     def remove_plus_part(self):
@@ -75,9 +78,11 @@ class EmailAddress(object):
 
     # Public: Get normalized email address
     #
-    # Returns normalized address according to the rules specified by the provider.
+    # Returns normalized address according to the rules specified by the
+    # provider.
     def normalized_address(self):
-        return "{username}@{domain}".format(username=self.username, domain=self.domain)
+        return "{username}@{domain}".format(
+            username=self.username, domain=self.domain)
 
     # Public: Determine if two email addresses are the same
     #
@@ -85,11 +90,13 @@ class EmailAddress(object):
     #
     # Returns true if same or false if not
     def same_as(self, address):
-        return (self.username == address.username) and self.provider.same_as(address.provider)
+        return ((self.username == address.username) and
+                self.provider.same_as(address.provider))
 
     # private
 
-    # Internal: Normalize email address according to rules specified by the provider
+    # Internal: Normalize email address according to rules specified by the
+    # provider
     #
     # Returns nothing
     def normalize(self):

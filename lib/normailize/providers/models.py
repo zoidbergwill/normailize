@@ -1,8 +1,3 @@
-from .gmail import Gmail
-from .live import Live
-from .hotmail import Hotmail
-
-
 class Provider(object):
     # # Public: Set on or more domains for a provider
     # #
@@ -22,7 +17,8 @@ class Provider(object):
     # #
     # #   - :lowercase         Lowercase characthers in username part
     # #   - :remove_dots       Removes all dots in username part
-    # #   - :remove_plus_part  Removes everything after the first occurrence of a plus sign
+    # #   - :remove_plus_part  Removes everything after the first occurrence of
+    # #                        a plus sign
     # #
     # # Returns nothing
     # def set_modifications(*modifications)
@@ -74,6 +70,33 @@ class Provider(object):
             return self.domain == provider.domain
         else:
             return type(self) == type(provider)
+
+
+class Gmail(Provider):
+    # Gmail addresses work on both gmail.com and googlemail.com
+    domains = ('gmail.com', 'googlemail.com')
+
+    # A normalized Gmail address is lowercased, dots and everything after a
+    # plus sign is removed from the username part
+    modifications = ('lowercase', 'remove_dots', 'remove_plus_part')
+
+
+class Hotmail(Provider):
+    # A hotmail account only works on the hotmail.com domain
+    domains = ('hotmail.com',)
+
+    # A normalized hotmail address is lowercased and everything after a plus
+    # sign is removed
+    modifications = ('lowercase', 'remove_plus_part')
+
+
+class Live(Provider):
+    # A Live account only works on the live.com domain
+    domains = ('live.com',)
+
+    # A mormalized Live address is lowercased and everything after a plus sign
+    # is removed
+    modifications = ('lowercase', 'remove_plus_part')
 
 
 def create_provider(domain):
